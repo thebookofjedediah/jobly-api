@@ -24,6 +24,10 @@ router.get("/", async function (req, res, next) {
 router.post("/", async function (req, res, next) {
     try {
         const validation = validate(req.body, createCompany);
+        if (!validation.valid) {
+            throw new ExpressError(validation.errors.map(e => e.stack), 400);
+        }
+
         const newCompany = await Company.create(req.body);
         return res.status(201).json({ newCompany });
     } catch (e) {
@@ -49,6 +53,10 @@ router.get("/:handle", async function (req, res, next) {
 router.patch("/:handle", async function (req, res, next) {
     try {
         const validation = validate(req.body, updateCompany);
+        if (!validation.valid) {
+          throw new ExpressError(validation.errors.map(e => e.stack), 400);
+        }
+
         if ('handle' in req.body) {
             throw new ExpressError('You are not allowed to change the handle.', 400);
         }
