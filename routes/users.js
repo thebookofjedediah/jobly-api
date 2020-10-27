@@ -2,8 +2,8 @@ const express = require("express");
 const ExpressError = require("../helpers/expressError");
 const User = require("../models/user");
 const createToken = require('../helpers/createToken');
-// const { validate } = require('jsonschema');
-// const { createUser, updateUser } = require('../schemas');
+const { validate } = require('jsonschema');
+const { createUser, updateUser } = require('../schemas');
 
 const router = new express.Router();
 
@@ -24,6 +24,11 @@ router.get("/", async function (req, res, next) {
 // ********************
 router.post("/", async function (req, res, next) {
     try {
+        const validation = validate(req.body, createUser);
+        if (!validation.valid) {
+        throw new ExpressError(validation.errors.map(e => e.stack), 400);
+        }
+
         const newUser = await User.register(req.body);
         const token = createToken(newUser);
         return res.status(201).json({ token });
@@ -49,6 +54,11 @@ router.get("/:username", async function (req, res, next) {
 // ********************
 router.patch("/:username", async function (req, res, next) {
     try {
+        const validation = validate(req.body, updateUser);
+        if (!validation.valid) {
+        throw new ExpressError(validation.errors.map(e => e.stack), 400);
+        }
+
         const user = await User.update(req.params.username, req.body);
         return res.json({ user });
     } catch (e) {
