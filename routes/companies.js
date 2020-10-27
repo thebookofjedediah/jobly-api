@@ -3,7 +3,6 @@ const ExpressError = require("../helpers/expressError");
 const Company = require("../models/company");
 const { validate } = require('jsonschema');
 const { createCompany, updateCompany } = require('../schemas');
-const { create } = require("../models/company");
 
 const router = new express.Router();
 
