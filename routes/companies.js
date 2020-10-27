@@ -1,9 +1,11 @@
 const express = require("express");
-const router = new express.Router();
 const ExpressError = require("../helpers/expressError");
 const Company = require("../models/company");
-const db = require("../db");
-const app = require("../app");
+const { validate } = require('jsonschema');
+const { createCompany, updateCompany } = require('../schemas');
+const { create } = require("../models/company");
+
+const router = new express.Router();
 
 // ********************
 // GET all companies and allow query strings for min/max employees, search
@@ -22,6 +24,7 @@ router.get("/", async function (req, res, next) {
 // ********************
 router.post("/", async function (req, res, next) {
     try {
+        const validation = validate(req.body, createCompany);
         const newCompany = await Company.create(req.body);
         return res.status(201).json({ newCompany });
     } catch (e) {
@@ -46,6 +49,7 @@ router.get("/:handle", async function (req, res, next) {
 // ********************
 router.patch("/:handle", async function (req, res, next) {
     try {
+        const validation = validate(req.body, updateCompany);
         if ('handle' in req.body) {
             throw new ExpressError('You are not allowed to change the handle.', 400);
         }
