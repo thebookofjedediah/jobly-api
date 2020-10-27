@@ -1,0 +1,32 @@
+{
+  "name": "jobly-api",
+  "version": "1.0.0",
+  "description": "api backend for job board",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thebookofjedediah/jobly-api.git"
+  },
+  "keywords": [
+    "node",
+    "api",
+    "react",
+    "REST",
+    "TDD"
+  ],
+  "author": "Jedediah Arnold",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thebookofjedediah/jobly-api/issues"
+  },
+  "homepage": "https://github.com/thebookofjedediah/jobly-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.4.2"
+  }
+}
