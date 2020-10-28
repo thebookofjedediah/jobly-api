@@ -1,4 +1,4 @@
-\c jobly
+\c jobly-test
 
 CREATE TABLE companies(
     handle TEXT PRIMARY KEY,

@@ -59,10 +59,7 @@ class Company {
             [data.handle]
         );
         if (duplicateCheck.rows[0]) {
-            throw new ExpressError(
-                `There already exists a company with handle '${data.handle}`,
-                400
-            );
+            throw new ExpressError(`There already exists a company with handle '${data.handle}`, 400);
         }
     
         const result = await db.query(`

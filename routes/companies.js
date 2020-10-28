@@ -13,7 +13,7 @@ const router = new express.Router();
 router.get("/", authRequired, async function (req, res, next) {
     try {
         const companies = await Company.findAll(req.query);
-        return res.json({ companies })
+        return res.json({ companies }, 201)
     } catch (e) {
         return next(e)
     }
