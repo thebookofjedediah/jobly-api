@@ -47,7 +47,9 @@ describe("POST /jobs", async function () {
 
 describe("GET /jobs", async function () {
   test("Gets a list of 1 job", async function () {
-    const response = await request(app).get(`/jobs`);
+    const response = await request(app).get(`/jobs`).send({ _token: TEST_DATA.userToken });
+    console.log("***********************************");
+    console.log(response.body);
     const jobs = response.body.jobs;
     expect(jobs).toHaveLength(1);
     expect(jobs[0]).toHaveProperty("company_handle");

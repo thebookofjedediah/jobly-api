@@ -25,7 +25,7 @@ describe('POST /companies', async function() {
         _token: TEST_DATA.userToken
       });
     expect(response.statusCode).toBe(201);
-    expect(response.body.company).toHaveProperty('handle');
+    expect(response.body.newCompany).toHaveProperty('handle');
   });
 
   test('Prevents creating a company with duplicate handle', async function() {
@@ -42,9 +42,7 @@ describe('POST /companies', async function() {
 
 describe('GET /companies', async function() {
   test('Gets a list of 1 company', async function() {
-    const response = await request(app).get('/companies');
-    console.log("*********************")
-    console.log(response.body.companies)
+    const response = await request(app).get('/companies').send({ _token: TEST_DATA.userToken });
     expect(response.body.companies).toHaveLength(1);
     expect(response.body.companies[0]).toHaveProperty('handle');
   });
