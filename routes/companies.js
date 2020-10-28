@@ -1,5 +1,6 @@
 const express = require("express");
 const ExpressError = require("../helpers/expressError");
+const { adminRequired, authRequired } = require('../middleware/auth');
 const Company = require("../models/company");
 const { validate } = require('jsonschema');
 const { createCompany, updateCompany } = require('../schemas');
@@ -9,7 +10,7 @@ const router = new express.Router();
 // ********************
 // GET all companies and allow query strings for min/max employees, search
 // ********************
-router.get("/", async function (req, res, next) {
+router.get("/", authRequired, async function (req, res, next) {
     try {
         const companies = await Company.findAll(req.query);
         return res.json({ companies })
@@ -21,7 +22,7 @@ router.get("/", async function (req, res, next) {
 // ********************
 // POST create a new company
 // ********************
-router.post("/", async function (req, res, next) {
+router.post("/", adminRequired, async function (req, res, next) {
     try {
         const validation = validate(req.body, createCompany);
         if (!validation.valid) {
@@ -38,7 +39,7 @@ router.post("/", async function (req, res, next) {
 // ********************
 // GET single company
 // ********************
-router.get("/:handle", async function (req, res, next) {
+router.get("/:handle", authRequired, async function (req, res, next) {
     try {
         const company = await Company.findOne(req.params.handle);
         return res.json({ company });
@@ -50,7 +51,7 @@ router.get("/:handle", async function (req, res, next) {
 // ********************
 // PATCH update a single company
 // ********************
-router.patch("/:handle", async function (req, res, next) {
+router.patch("/:handle", adminRequired, async function (req, res, next) {
     try {
         const validation = validate(req.body, updateCompany);
         if (!validation.valid) {
@@ -70,7 +71,7 @@ router.patch("/:handle", async function (req, res, next) {
 // ********************
 // DELETE remove a company from db
 // ********************
-router.delete('/:handle', async function(req, res, next) {
+router.delete('/:handle', adminRequired, async function(req, res, next) {
     try {
       await Company.deleteCompany(req.params.handle);
       return res.json({ message: 'Company deleted' });

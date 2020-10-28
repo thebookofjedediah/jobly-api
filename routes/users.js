@@ -1,5 +1,6 @@
 const express = require("express");
 const ExpressError = require("../helpers/expressError");
+const { ensureCorrectUser, authRequired } = require('../middleware/auth');
 const User = require("../models/user");
 const createToken = require('../helpers/createToken');
 const { validate } = require('jsonschema');
@@ -10,7 +11,7 @@ const router = new express.Router();
 // ********************
 // GET all users
 // ********************
-router.get("/", async function (req, res, next) {
+router.get("/", authRequired, async function (req, res, next) {
     try {
         const users = await User.findAll(req.query);
         return res.json({ users });
@@ -26,7 +27,7 @@ router.post("/", async function (req, res, next) {
     try {
         const validation = validate(req.body, createUser);
         if (!validation.valid) {
-        throw new ExpressError(validation.errors.map(e => e.stack), 400);
+            throw new ExpressError(validation.errors.map(e => e.stack), 400);
         }
 
         const newUser = await User.register(req.body);
@@ -40,7 +41,7 @@ router.post("/", async function (req, res, next) {
 // ********************
 // GET single user
 // ********************
-router.get("/:username", async function (req, res, next) {
+router.get("/:username", authRequired, async function (req, res, next) {
     try {
         const user = await User.findOne(req.params.username);
         return res.json({ user });
@@ -52,7 +53,7 @@ router.get("/:username", async function (req, res, next) {
 // ********************
 // PATCH update a user
 // ********************
-router.patch("/:username", async function (req, res, next) {
+router.patch("/:username", ensureCorrectUser, async function (req, res, next) {
     try {
         const validation = validate(req.body, updateUser);
         if (!validation.valid) {
@@ -69,7 +70,7 @@ router.patch("/:username", async function (req, res, next) {
 // ********************
 // DELETE a user
 // ********************
-router.delete("/:username", async function (req, res, next) {
+router.delete("/:username", ensureCorrectUser, async function (req, res, next) {
     try {
         await User.remove(req.params.username);
         return res.json({ message: 'User deleted' });
